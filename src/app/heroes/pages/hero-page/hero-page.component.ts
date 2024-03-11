@@ -4,6 +4,7 @@ import { switchMap } from 'rxjs';
 
 import { HeroesService } from '../../services/heroes.service';
 import { Hero } from '../../interfaces/hero.interface';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-hero-page',
@@ -19,6 +20,7 @@ export class HeroPageComponent implements OnInit {
     private heroesService: HeroesService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private _location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +38,9 @@ export class HeroPageComponent implements OnInit {
   }
 
   goBack():void {
-    this.router.navigateByUrl('heroes/list')
+    //this.router.navigateByUrl('heroes/list')
+    //history.back();
+    this._location.back();
   }
 
 }
