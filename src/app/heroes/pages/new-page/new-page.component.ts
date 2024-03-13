@@ -55,36 +55,26 @@ export class NewPageComponent implements OnInit {
     this.activatedRoute.params
       .pipe(
         switchMap( ({ id }) => this.heroesService.getHeroById( id ) ),
-      ).subscribe( hero => {
-
-        if ( !hero ) {
-          return this.router.navigateByUrl('/');
-        }
-
+      )
+      .subscribe( hero => {
+        if ( !hero ) return this.router.navigateByUrl('/');
         this.heroForm.reset( hero );
         return;
       });
-
   }
 
-
-
   onSubmit():void {
-
     if ( this.heroForm.invalid ) return;
-
     if ( this.currentHero.id ) {
       this.heroesService.updateHero( this.currentHero )
         .subscribe( hero => {
           this.showSnackbar(`${ hero.superhero } updated!`);
         });
-
       return;
     }
 
     this.heroesService.addHero( this.currentHero )
       .subscribe( hero => {
-        // TODO: mostrar snackbar, y navegar a /heroes/edit/ hero.id
         this.router.navigate(['/heroes/edit', hero.id ]);
         this.showSnackbar(`${ hero.superhero } created!`);
       });
@@ -92,7 +82,6 @@ export class NewPageComponent implements OnInit {
 
   onDeleteHero() {
     if ( !this.currentHero.id ) throw Error('Hero id is required');
-
     const dialogRef = this.dialog.open( ConfirmDialogComponent, {
       data: this.heroForm.value
     });
@@ -106,17 +95,6 @@ export class NewPageComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['/heroes']);
       });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if ( !result ) return;
-
-    //   this.heroesService.deleteHeroById( this.currentHero.id )
-    //   .subscribe( wasDeleted => {
-    //     if ( wasDeleted )
-    //       this.router.navigate(['/heroes']);
-    //   })
-    // });
-
   }
 
 
