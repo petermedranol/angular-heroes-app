@@ -4,7 +4,7 @@ import { Observable, map, tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({providedIn: 'root'})
-export class AuthGuard implements CanMatch, CanActivate {
+export class PublicGuard implements CanMatch, CanActivate {
 
   constructor(
     private authService: AuthService,
@@ -15,7 +15,8 @@ export class AuthGuard implements CanMatch, CanActivate {
     return this.authService.checkAuthentication()
       .pipe(
         tap( isAuth => { console.log('Authenticated: ', isAuth); }),
-        tap( isAuth => { if(!isAuth) { this.router.navigate(['./auth/login']); return false; } return true; })
+        tap( isAuth => { if(isAuth) { this.router.navigate(['./']); } }),
+        map( isAuth => !isAuth )
       )
   }
 
@@ -26,5 +27,6 @@ export class AuthGuard implements CanMatch, CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
     return this.checkAuthStatus();
   }
+
 
 }
